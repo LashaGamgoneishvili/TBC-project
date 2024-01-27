@@ -228,13 +228,13 @@ const mobileSliderFunction = function () {
     for (let i = 0; i < slides.length; i++) {
       slides[i].addEventListener("touchstart", (e) => {
         touchStartX = e.touches[0].pageX;
-        clearInterval(intervalId);
+        // clearInterval(intervalId);
       });
 
-      slides[i].addEventListener("touchmove", (e) => {
-        touchEndX = e.touches[0].pageX;
-        clearInterval(intervalId);
-      });
+      // slides[i].addEventListener("touchmove", (e) => {
+      //   touchEndX = e.touches[0].pageX;
+      //   // clearInterval(intervalId);
+      // });
 
       slides[i].addEventListener("touchend", () => {
         if (touchStartX !== undefined && touchEndX !== undefined) {
@@ -243,7 +243,7 @@ const mobileSliderFunction = function () {
           } else {
             previousM(i);
           }
-          startInterval(i);
+          // startInterval(i);
           // Reset touch coordinates
           touchStartX = touchEndX = undefined;
         }
