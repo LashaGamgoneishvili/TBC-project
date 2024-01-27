@@ -72,6 +72,7 @@ createDots();
 function goToSlide(slide) {
   slides.forEach((s) => s.classList.add("hide"));
   slides[slide].classList.remove("hide");
+  clearInterval(setIntervalId);
 }
 
 // next slide
@@ -94,17 +95,22 @@ const previous = function () {
   goToSlide(curSlide);
 };
 
-// Get the width and height of the viewport
+// Get the width of the viewport
 const screenWidth =
   window.innerWidth ||
   document.documentElement.clientWidth ||
   document.body.clientWidth;
 
-if (screenWidth > 700) {
-  setInterval(nextSlide, 4000);
-}
+let setIntervalId;
 
-// Event Handlers
+// set interval when screen size is more then 700px
+const setIntervalFunction = () =>
+  (setIntervalId = setInterval(nextSlide, 4000));
+
+if (screenWidth > 700) {
+  setIntervalFunction();
+}
+/////  Event Handlers  ///////
 btnRight.addEventListener("click", nextSlide);
 btnLeft.addEventListener("click", previous);
 
@@ -119,92 +125,105 @@ dotContainer.addEventListener("click", function (e) {
     const { slide } = e.target.dataset;
     if (screenWidth > 700) {
       goToSlide(Number(slide));
+      clearInterval(setIntervalId);
     } else {
       slideChanging(slide);
     }
   }
 });
 
-////////// style form mobile size /////////
+////////// building slider less then 700px size /////////
 const slider = document.querySelector(".slider");
 
-const slideChanging = function (slide) {
-  slides.forEach((s, i) => {
-    s.style.transform = `translateX(${100 * (i - slide)}%)`;
-    s.style.opacity = "1";
-  });
-  // Add blur class to the slider for 1 second
-  slides[slide].classList.add("blur");
-  setTimeout(() => {
-    // Remove blur class after 1 second
-    slides[slide].classList.remove("blur");
-  }, 700);
-};
-slideChanging(0);
+///////   main function   ///////
+const mobileSliderFunction = function () {
+  //// changing translateX, opacity and blur
+  const slideChanging = function (slide) {
+    slides.forEach((s, i) => {
+      s.style.transform = `translateX(${100 * (i - slide)}%)`;
+      s.style.opacity = "1";
+    });
+    // Add blur class to the slider for 1 second
+    slides[slide].classList.add("blur");
+    setTimeout(() => {
+      // Remove blur class after 1 second
+      slides[slide].classList.remove("blur");
+    }, 700);
+  };
 
-// next slide
-const nextSlideM = function () {
-  if (curSlide === maxSlide - 1) {
-    curSlide = 0;
-  } else {
-    curSlide++;
+  slideChanging(0);
+
+  // next slide for mobile version
+  const nextSlideM = function () {
+    if (curSlide === maxSlide - 1) {
+      curSlide = 0;
+    } else {
+      curSlide++;
+    }
+    slideChanging(curSlide);
+  };
+
+  // Previous Slide for mobile version
+  const previousM = function () {
+    if (curSlide === 0) {
+      curSlide = maxSlide - 1;
+    } else {
+      curSlide--;
+    }
+    slideChanging(curSlide);
+  };
+
+  //// set interval for mobile version
+  let intervalId;
+
+  const startInterval = function () {
+    intervalId = setInterval(nextSlideM, 4000);
+  };
+
+  if (screenWidth < 700) {
+    startInterval();
   }
-  slideChanging(curSlide);
-};
 
-// Previous Slide
-const previousM = function () {
-  if (curSlide === 0) {
-    curSlide = maxSlide - 1;
-  } else {
-    curSlide--;
+  let touchStartX, touchEndX;
+
+  /////  Event Handlers  ///////
+
+  const mobileSlider = function () {
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].addEventListener("touchstart", (e) => {
+        touchStartX = e.touches[0].pageX;
+        clearInterval(intervalId);
+      });
+
+      slides[i].addEventListener("touchmove", (e) => {
+        touchEndX = e.touches[0].pageX;
+        clearInterval(intervalId);
+      });
+
+      slides[i].addEventListener("touchend", () => {
+        if (touchStartX !== undefined && touchEndX !== undefined) {
+          if (touchStartX > touchEndX) {
+            nextSlideM(i);
+          } else {
+            previousM(i);
+          }
+          startInterval();
+          // Reset touch coordinates
+          touchStartX = touchEndX = undefined;
+        }
+      });
+    }
+  };
+
+  mobileSlider();
+
+  for (let i = 0; i < slides.length; i++) {
+    slides[i].addEventListener("touchmove", mobileSlider);
   }
-  slideChanging(curSlide);
-};
-
-let intervalId;
-
-const startInterval = function () {
-  intervalId = setInterval(nextSlideM, 4000);
 };
 
 if (screenWidth < 700) {
-  startInterval();
-}
-
-let touchStartX, touchEndX;
-
-const mobileSlider = function () {
-  for (let i = 0; i < slides.length; i++) {
-    slides[i].addEventListener("touchstart", (e) => {
-      touchStartX = e.touches[0].pageX;
-      clearInterval(intervalId);
-    });
-
-    slides[i].addEventListener("touchmove", (e) => {
-      touchEndX = e.touches[0].pageX;
-      clearInterval(intervalId);
-    });
-
-    slides[i].addEventListener("touchend", () => {
-      if (touchStartX !== undefined && touchEndX !== undefined) {
-        if (touchStartX > touchEndX) {
-          nextSlideM(i);
-        } else {
-          previousM(i);
-        }
-        startInterval();
-        // Reset touch coordinates
-        touchStartX = touchEndX = undefined;
-      }
-    });
-  }
-};
-
-mobileSlider();
-
-for (let i = 0; i < slides.length; i++) {
-  slides[i].addEventListener("touchmove", mobileSlider);
+  mobileSliderFunction();
 }
 
 /////////  question section - accordion //////////
