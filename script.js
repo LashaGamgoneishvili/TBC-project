@@ -98,6 +98,7 @@ createDots();
 
 const largeSizeScrean = function () {
   console.log("sdljfwosiejdofoa");
+  // remove mobile size page interval
   if (intervalId) {
     clearInterval(intervalId);
   }
@@ -168,6 +169,7 @@ const slider = document.querySelector(".slider");
 ///////   main function   ///////
 const mobileSliderFunction = function () {
   console.log(windowWidth);
+  // large page interval
   if (setIntervalId) {
     clearInterval(setIntervalId);
   }
