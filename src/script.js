@@ -1,11 +1,11 @@
 ("use strict");
-import { accordion } from "./questions.js";
-import { interObserver } from "./stickynav.js";
-import { openMenu } from "./menu.js";
-import { nextSlide, previous } from "./nextslide.js";
+import { accordion } from "./accordion.js";
+import { interObserver } from "./sticky-nav.js";
+import {} from "./menu.js";
+import { nextSlide, previous } from "./slide-move.js";
 
 // Get the width of the viewport
-var screenWidth =
+const screenWidth =
   window.innerWidth ||
   document.documentElement.clientWidth ||
   document.body.clientWidth;
@@ -18,7 +18,6 @@ window.addEventListener("beforeunload", function () {
 interObserver();
 
 ////////////   Slider Component    /////////////
-
 const slides = document.querySelectorAll(".slide");
 const btnLeft = document.querySelector(".slider__btn--left");
 const btnRight = document.querySelector(".slider__btn--right");
@@ -27,7 +26,7 @@ const dotContainer = document.querySelector(".dots");
 // variables
 let setIntervalId;
 let intervalId;
-let windowWidth;
+let touchStartX, touchEndX;
 const maxSlide = slides.length;
 
 // Functions
@@ -41,7 +40,7 @@ const createDots = function () {
 };
 createDots();
 
-const largeSizeScrean = function (sreenSize) {
+const largeSizeScreen = function (sreenSize) {
   // remove mobile size page interval
   if (intervalId) {
     clearInterval(intervalId);
@@ -53,7 +52,7 @@ const largeSizeScrean = function (sreenSize) {
   }
 
   // set interval when screen size is more then 500px
-  const setIntervalFunction = () => {
+  const sliderInterval = () => {
     if (!setIntervalId) {
       setIntervalId = setInterval(() => {
         nextSlide(maxSlide, goToSlide);
@@ -61,7 +60,7 @@ const largeSizeScrean = function (sreenSize) {
     }
   };
 
-  setIntervalFunction();
+  sliderInterval();
 
   /////  Event Handlers  ///////
   btnRight.addEventListener("click", function () {
@@ -94,7 +93,6 @@ const slider = document.querySelector(".slider");
 
 ///////   main function   ///////
 const mobileSliderFunction = function (sreenSize) {
-  console.log(windowWidth);
   // large page interval
   if (setIntervalId) {
     clearInterval(setIntervalId);
@@ -116,18 +114,15 @@ const mobileSliderFunction = function (sreenSize) {
   slideChanging(0);
 
   //// set interval for mobile version
-  const startInterval = function (slide) {
+  const mobileSlideInterval = function () {
     intervalId = setInterval(function () {
       nextSlide(maxSlide, slideChanging);
     }, 4000);
   };
 
   if (sreenSize < 500 && !intervalId) {
-    console.log("gamoneishvili");
-    startInterval();
+    mobileSlideInterval();
   }
-
-  let touchStartX, touchEndX;
 
   /////  Event Handlers  ///////
   const mobileSlider = function () {
@@ -150,7 +145,7 @@ const mobileSliderFunction = function (sreenSize) {
             previous(maxSlide, slideChanging);
           }
           clearInterval(intervalId);
-          startInterval(i);
+          mobileSlideInterval();
           // Reset touch coordinates
           touchStartX = touchEndX = undefined;
         }
@@ -176,21 +171,14 @@ const mobileSliderFunction = function (sreenSize) {
 
 accordion();
 
-function versionPicker(Width) {
+function checkScreenSize(Width) {
   // Example: Make changes for window widths greater than 768 pixels
   if (Width > 500) {
-    largeSizeScrean(Width);
+    largeSizeScreen(Width);
   } else {
     ////// execute mobile main function when screenWidth is less then 500px  ////////
     mobileSliderFunction(Width);
   }
 }
 
-window.addEventListener("load", function () {
-  window.scrollTo(0, 0);
-  if (!windowWidth) {
-    versionPicker(screenWidth);
-  } else {
-    versionPicker(windowWidth);
-  }
-});
+checkScreenSize(screenWidth);
