@@ -815,7 +815,15 @@ nav a:hover {
 
   .right-side .icons {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
     gap: 14px;
+  }
+
+  .icons a {
+    display: flex;
+    justify-content: center;
   }
 
   .icons img {

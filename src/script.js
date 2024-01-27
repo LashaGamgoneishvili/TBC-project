@@ -14,8 +14,8 @@ var screenWidth =
 window.addEventListener("beforeunload", function () {
   window.scrollTo(0, 0);
 });
+
 interObserver();
-openMenu();
 
 ////////////   Slider Component    /////////////
 
@@ -118,7 +118,7 @@ const mobileSliderFunction = function (sreenSize) {
   //// set interval for mobile version
   const startInterval = function (slide) {
     intervalId = setInterval(function () {
-      nextSlide(slide, slideChanging);
+      nextSlide(maxSlide, slideChanging);
     }, 4000);
   };
 
