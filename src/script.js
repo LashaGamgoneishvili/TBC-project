@@ -134,20 +134,20 @@ const mobileSliderFunction = function (sreenSize) {
     for (let i = 0; i < slides.length; i++) {
       slides[i].addEventListener("touchstart", (e) => {
         touchStartX = e.touches[0].pageX;
-        // clearInterval(intervalId);
+        clearInterval(intervalId);
       });
 
       slides[i].addEventListener("touchmove", (e) => {
         touchEndX = e.touches[0].pageX;
-        // clearInterval(intervalId);
+        clearInterval(intervalId);
       });
 
       slides[i].addEventListener("touchend", () => {
         if (touchStartX !== undefined && touchEndX !== undefined) {
           if (touchStartX > touchEndX) {
-            nextSlide(i, slideChanging);
+            nextSlide(maxSlide, slideChanging);
           } else {
-            previous(i, slideChanging);
+            previous(maxSlide, slideChanging);
           }
           clearInterval(intervalId);
           startInterval(i);
