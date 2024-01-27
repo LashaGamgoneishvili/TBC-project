@@ -527,25 +527,25 @@ nav a:hover {
     align-self: flex-end;
   }
 
-  .menu-close {
+  .menu-opened {
     width: 30px;
     height: 30px;
     padding: 0;
     margin: 0;
   }
 
-  .menu-close div:first-child {
+  .menu-opened div:first-child {
     transform: rotatez(-140deg) translate(-8px, -1px);
     transform-origin: bottom;
   }
 
-  .menu-close div:nth-child(2) {
+  .menu-opened div:nth-child(2) {
     transform: rotatez(-45deg) translate(1px, 1px);
     transform-origin: top;
     width: 30px;
   }
 
-  .menu-close div:last-child {
+  .menu-opened div:last-child {
     transform: rotatez(-140deg) translate(6px, 10px);
     transform-origin: bottom;
   }
