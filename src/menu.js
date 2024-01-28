@@ -2,6 +2,7 @@
 
 const menu = document.querySelector(".menu-icon");
 const navigation = document.querySelector("nav");
+const body = document.querySelector("body");
 
 export function openMenu() {
   // checking if menu contains "menu-opend" clss
@@ -17,8 +18,10 @@ export function openMenu() {
           navigation.classList.remove("active-nav");
         },
         { once: true }
-      ))
-    : ((navigation.style = "transform: translateX(0%)"),
+      ),
+      body.classList.remove("overflow-hidden"))
+    : (body.classList.add("overflow-hidden"),
+      (navigation.style = "transform: translateX(0%)"),
       navigation.classList.remove("nav-hide"),
       navigation.classList.add("active-nav"));
 
