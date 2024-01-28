@@ -6,8 +6,12 @@ export function interObserver() {
   const obs = new IntersectionObserver(
     function (entries) {
       const ent = entries[0];
-
-      if (ent.isIntersecting) header.classList.add("sticky");
+      console.log(entries[0]);
+      if (ent.isIntersecting) {
+        header.classList.add("sticky");
+        header.classList.add("fixed-header");
+        section.classList.add("section-marin");
+      }
     },
     {
       root: null,
